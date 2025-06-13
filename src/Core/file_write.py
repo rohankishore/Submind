@@ -1,11 +1,13 @@
 from googletrans import Translator  # Add this if not already
 
+
 def format_timestamp(seconds):
     milliseconds = int((seconds - int(seconds)) * 1000)
     hours = int(seconds // 3600)
     minutes = int((seconds % 3600) // 60)
     secs = int(seconds % 60)
     return f"{hours:02}:{minutes:02}:{secs:02},{milliseconds:03}"
+
 
 def write_srt(transcription, output_path, translate_to=None):
     translator = Translator()

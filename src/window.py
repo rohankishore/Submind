@@ -11,7 +11,7 @@ from qfluentwidgets import ComboBox
 
 from Core.file_write import write_srt
 from const import LANGUAGES
-
+from Core.translator import transcribe, batch_transcribe
 
 class SubmindGUI(QWidget):
     def __init__(self):
@@ -92,8 +92,8 @@ class SubmindGUI(QWidget):
         layout.addWidget(browse_btn)
 
         transcribe_btn = QPushButton("📝 Transcribe to SRT")
-        transcribe_btn.clicked.connect(self.transcribe)
-        layout.addWidget(transcribe_btn, alignment=Qt.AlignmentFlag.AlignBottomz)
+        transcribe_btn.clicked.connect(lambda: transcribe(self))
+        layout.addWidget(transcribe_btn, alignment=Qt.AlignmentFlag.AlignBottom)
 
         self.status = QLabel("")
         self.status.setObjectName("StatusLabel")
@@ -133,7 +133,7 @@ class SubmindGUI(QWidget):
         layout.addWidget(self.batch_save_trf_cbox)
 
         start_btn = QPushButton("🚀 Start Batch Transcription")
-        start_btn.clicked.connect(self.batch_transcribe)
+        start_btn.clicked.connect(lambda: batch_transcribe(self))
         layout.addWidget(start_btn)
 
         self.batch_status = QLabel("")
@@ -198,7 +198,7 @@ class SubmindGUI(QWidget):
         self.status.setText("✅ Done! Saved to:\n" + output_path)
 
         msg = f"Original subtitles saved to:\n{output_path}"
-        if save_sep_srt():
+        if save_sep_srt:
             msg += f"\nTranslated subtitles saved to:\n{translated_path}"
         QMessageBox.information(self, "Success", msg)
         self.status.setText("✅ Done!")

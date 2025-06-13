@@ -8,30 +8,18 @@ from PyQt6.QtGui import QIcon
 import os
 from datetime import timedelta
 import sys
+import googletrans
+from qfluentwidgets import ComboBox
 
-def format_timestamp(seconds):
-    milliseconds = int((seconds - int(seconds)) * 1000)
-    hours = int(seconds // 3600)
-    minutes = int((seconds % 3600) // 60)
-    secs = int(seconds % 60)
-    return f"{hours:02}:{minutes:02}:{secs:02},{milliseconds:03}"
+from const import LANGUAGES
+from Core.file_write import write_srt
 
-def write_srt(transcription, output_path, single_speaker=False):
-    with open(output_path, "w", encoding="utf-8") as f:
-        for i, segment in enumerate(transcription["segments"], 1):
-            f.write(f"{i}\n")
-            start = format_timestamp(segment["start"])
-            end = format_timestamp(segment["end"])
-            text = segment["text"].strip()
-            line = text if single_speaker else f"[Speaker ?]: {text}"
-            f.write(f"{start} --> {end}\n")
-            f.write(f"{line}\n\n")
 
 class SubmindGUI(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Submind 🎬")
-        self.setFixedSize(420, 300)
+        self.setWindowTitle("Submind")
+        self.setMinimumSize(520, 400)
         self.setStyleSheet("""
             QWidget {
                 font-family: 'Segoe UI', sans-serif;
@@ -78,12 +66,24 @@ class SubmindGUI(QWidget):
         self.file_input.setPlaceholderText("No file selected...")
         layout.addWidget(self.file_input)
 
+        # Auto Translate Checkbox
+        self.translate_checkbox = QCheckBox("🌍 Auto Translate Subtitles")
+        self.translate_checkbox.stateChanged.connect(self.toggle_language_dropdown)
+        layout.addWidget(self.translate_checkbox)
+
+        # Language Selector Dropdown
+        self.lang_dropdown = ComboBox()
+        self.lang_dropdown.addItems(LANGUAGES.keys())
+        self.lang_dropdown.hide()  # Initially hidden
+        layout.addWidget(self.lang_dropdown)
+
+        self.save_trf_cbox = QCheckBox("🗃️ Save Translated SRT Separately")
+        self.save_trf_cbox.hide()
+        layout.addWidget(self.save_trf_cbox)
+
         browse_btn = QPushButton("📂 Browse")
         browse_btn.clicked.connect(self.browse_file)
         layout.addWidget(browse_btn)
-
-        self.single_checkbox = QCheckBox("🧍 Single Speaker (no tags)")
-        layout.addWidget(self.single_checkbox)
 
         transcribe_btn = QPushButton("📝 Transcribe to SRT")
         transcribe_btn.clicked.connect(self.transcribe)
@@ -101,7 +101,17 @@ class SubmindGUI(QWidget):
         if path:
             self.file_input.setText(path)
 
+    def toggle_language_dropdown(self):
+        is_checked = self.translate_checkbox.isChecked()
+        if is_checked:
+            self.save_trf_cbox.show()
+            self.lang_dropdown.show()
+        else:
+            self.save_trf_cbox.hide()
+            self.lang_dropdown.hide()
+
     def transcribe(self):
+        global translated_path
         path = self.file_input.text()
         if not os.path.exists(path):
             QMessageBox.critical(self, "Error", "Please select a valid file.")
@@ -116,13 +126,24 @@ class SubmindGUI(QWidget):
         result = model.transcribe(path)
 
         output_path = os.path.splitext(path)[0] + "_submind.srt"
-        write_srt(result, output_path, self.single_checkbox.isChecked())
+        translate_to = None
+        if self.translate_checkbox.isChecked():
+            selected_lang = self.lang_dropdown.currentText()
+            translate_to = LANGUAGES.get(selected_lang)
+        write_srt(result, output_path)
+
+        save_sep_srt = self.save_trf_cbox.isChecked()
+
+        if save_sep_srt:
+            selected_lang = self.lang_dropdown.currentText()
+            translate_to = LANGUAGES.get(selected_lang)
+            translated_path = os.path.splitext(path)[0] + f"_submind_translated_{translate_to}.srt"
+            write_srt(result, translated_path, translate_to)
 
         self.status.setText("✅ Done! Saved to:\n" + output_path)
-        QMessageBox.information(self, "Success", f"Subtitles saved to:\n{output_path}")
 
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    gui = SubmindGUI()
-    gui.show()
-    sys.exit(app.exec())
+        msg = f"Original subtitles saved to:\n{output_path}"
+        if self.translate_checkbox.isChecked():
+            msg += f"\nTranslated subtitles saved to:\n{translated_path}"
+        QMessageBox.information(self, "Success", msg)
+        self.status.setText("✅ Done!")

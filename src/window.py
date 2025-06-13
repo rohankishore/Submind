@@ -10,7 +10,7 @@ from PyQt6.QtWidgets import (
 from qfluentwidgets import ComboBox
 
 from Core.file_write import write_srt
-from const import LANGUAGES
+from src.Core.const import LANGUAGES
 from Core.translator import transcribe, batch_transcribe
 
 class SubmindGUI(QWidget):

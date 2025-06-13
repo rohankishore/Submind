@@ -1,16 +1,12 @@
 import os
 
 import whisper
-from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
-    QApplication, QWidget, QVBoxLayout, QLabel,
-    QPushButton, QFileDialog, QLineEdit, QCheckBox, QMessageBox,
-    QTabWidget, QListWidget, QListWidgetItem
+    QApplication, QMessageBox
 )
-from qfluentwidgets import ComboBox
 
 from .file_write import write_srt
-from ..const import LANGUAGES
+from src.Core.const import LANGUAGES
 
 
 def transcribe(self):

@@ -42,7 +42,7 @@ Submind is a modern, PyQt6-based GUI app powered by OpenAI Whisper. It enables y
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/yourusername/submind.git
+git clone https://github.com/rohankishore/Submind.git
 cd submind
 
 ### 2. Install requirements
@@ -125,4 +125,4 @@ Feel free to use, modify, and distribute it.
 
 ---
 
-> Built with ❤️ by [Your Name](https://github.com/yourusername)
+> Built with ❤️ by [Rohan Kishore](https://github.com/rohankishore)

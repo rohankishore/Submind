@@ -1,0 +1,7 @@
+googletrans==4.0.0rc1
+openai_whisper==20240930
+PyQt6==6.9.1
+PyQt6_Fluent_Widgets==1.5.1
+PyQt6_sip==13.5.2
+PyQt6_sip==13.10.0
+PyQt_Fluent_Widgets==1.4.1

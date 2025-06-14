@@ -2,6 +2,7 @@ import os
 
 import whisper
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QLabel,
     QPushButton, QFileDialog, QLineEdit, QCheckBox, QMessageBox,
@@ -19,6 +20,7 @@ class SubmindGUI(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Submind")
+        self.setWindowIcon(QIcon("assets/icon.png"))
         self.setMinimumSize(580, 460)
         self.setStyleSheet("""
             QWidget {

@@ -1,5 +1,8 @@
 <div align="center">
 
+![icon](https://github.com/user-attachments/assets/c6d5615c-dc98-4788-bb5b-094af5deb5f2)
+
+
 # 🎙️ Submind — AI Subtitle Generator
 
 Submind is a modern, PyQt6-based GUI app powered by OpenAI Whisper. It enables you to **generate perfectly timed subtitles** (SRT files) from any audio or video file, with optional **language translation** and **batch processing**.
@@ -29,6 +32,7 @@ Submind is a modern, PyQt6-based GUI app powered by OpenAI Whisper. It enables y
 
 - 🎧 **Single File Transcription** — transcribe any media file to subtitles.
 - 🗂️ **Batch Mode** — select multiple files and transcribe them at once.
+- 🖱️ **Drag and Drop** - Drag your files from folders directly to Submind
 - 🌍 **Auto Translation** — optional translation of subtitles to other languages.
 - 🗃️ **Save Separately** — choose to save translated subtitles as separate files.
 - 💻 **Clean Dark UI** — modern, minimal dark interface built with PyQt6 + Fluent Widgets.

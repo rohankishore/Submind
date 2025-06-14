@@ -12,6 +12,8 @@ from qfluentwidgets import ComboBox
 from Core.file_write import write_srt
 from src.Core.const import LANGUAGES
 from Core.translator import transcribe, batch_transcribe
+from Core.widgets import DraggableLineEdit, DraggableListWidget
+
 
 class SubmindGUI(QWidget):
     def __init__(self):
@@ -52,6 +54,8 @@ class SubmindGUI(QWidget):
             }
         """)
 
+        self.acceptDrops()
+
         self.tabs = QTabWidget(self)
         layout = QVBoxLayout(self)
         layout.addWidget(self.tabs)
@@ -70,7 +74,7 @@ class SubmindGUI(QWidget):
         label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(label)
 
-        self.file_input = QLineEdit()
+        self.file_input = DraggableLineEdit()
         self.file_input.setPlaceholderText("No file selected...")
         layout.addWidget(self.file_input)
 
@@ -112,7 +116,7 @@ class SubmindGUI(QWidget):
         label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(label)
 
-        self.batch_list = QListWidget()
+        self.batch_list = DraggableListWidget()
         layout.addWidget(self.batch_list)
 
         browse_btn = QPushButton("📂 Browse Files")
@@ -233,4 +237,3 @@ class SubmindGUI(QWidget):
 
         self.batch_status.setText("✅ All files processed!")
         QMessageBox.information(self, "Done", "All files have been transcribed.")
-
